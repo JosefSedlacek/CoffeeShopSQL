@@ -1,5 +1,5 @@
--- ________________________________________________________
--- ############# Příprava dat, změna datových typů ########
+--########################################################
+--############# Příprava dat, změna datových typů ########
 
 
 -- Prohlédnout si data a datové typy
@@ -18,40 +18,31 @@ ALTER TABLE coffee_shop_data DROP COLUMN transaction_date;
 ALTER TABLE coffee_shop_data
 CHANGE COLUMN trnsc_date transaction_date DATE;
 
-
 -- Upravid datový typ pro transaction_time
 ALTER TABLE coffee_shop_data ADD new_transaction_time TIME;
 
 UPDATE coffee_shop_data
 SET new_transaction_time = STR_TO_DATE(transaction_time, '%H:%i:%s');
-
 ALTER TABLE coffee_shop_data DROP COLUMN transaction_time;
-
 ALTER TABLE coffee_shop_data CHANGE COLUMN new_transaction_time transaction_time TIME;
-
 
 -- Upravit datový typ pro unit_price
 ALTER TABLE coffee_shop_data ADD new_unit_price DOUBLE;
 
 UPDATE coffee_shop_data
 SET new_unit_price = CAST(REPLACE(unit_price, ',', '.') AS DOUBLE);
-
 ALTER TABLE coffee_shop_data DROP COLUMN unit_price;
-
 ALTER TABLE coffee_shop_data CHANGE COLUMN new_unit_price unit_price DOUBLE;
-
 
 -- Kontrola datových typů
 DESCRIBE coffee_shop_data;
 
 
--- ________________________________________________________
--- ############# Analýza dat - KPI ukazatele ##############
-
+--########################################################
+--###################### Analýza dat #####################
 
 SELECT *
-FROM coffee_shop_data; -- done
-
+FROM coffee_shop_data;
 
 -- Zjistěte celkové prodeje za měsíc květen
 SELECT 
@@ -59,7 +50,6 @@ SELECT
 FROM coffee_shop_data
 WHERE 
 	MONTH (transaction_date) = 5 -- květen;
-	
 
 -- Zjistěte, jestli prodeje meziměsíčně rostly nebo klesaly
 -- vybraný měsíc ..... VM = květen = 5
@@ -77,14 +67,13 @@ WHERE
 GROUP BY 
 	MONTH (transaction_date)
 ORDER BY 
-	MONTH (transaction_date); -- done
-
+	MONTH (transaction_date);
 
 -- Zjistěte celkový počet objednávek
 SELECT count(transaction_id) AS total_orders
 FROM coffee_shop_data csd 
 WHERE 
-	MONTH (transaction_date) = 5 -- květen; -- done
+	MONTH (transaction_date) = 5; -- květen
 
 
 -- Zjistěte, jestli počet objednávek meziměsíčně roste nebo klesá
@@ -101,13 +90,13 @@ WHERE
 GROUP BY 
     MONTH(transaction_date)
 ORDER BY 
-    MONTH(transaction_date); -- done
+    MONTH(transaction_date);
 
 
 -- Zjistěte počet transakcí za květen
 SELECT SUM(transaction_qty) as Total_Quantity_Sold
 FROM coffee_shop_data
-WHERE MONTH(transaction_date) = 5; -- květen -- done
+WHERE MONTH(transaction_date) = 5; -- květen
 
 
 -- Zjistěte, zda celkové transakce meziměsíčně rostou nebo klesají
@@ -124,8 +113,7 @@ WHERE
 GROUP BY 
     MONTH(transaction_date)
 ORDER BY 
-    MONTH(transaction_date); -- done
-
+    MONTH(transaction_date);
 
 
 -- Kalendářní data, konkrétně 27.5
@@ -136,7 +124,7 @@ SELECT
 FROM 
     coffee_shop_data
 WHERE 
-    transaction_date = '2023-05-27'; -- datum 27 květen -- done
+    transaction_date = '2023-05-27'; -- datum 27 květen
 
 
 -- Zjistěte, jaký je trend v prodejích za květen
@@ -150,7 +138,7 @@ FROM (
         MONTH(transaction_date) = 5
     GROUP BY 
         transaction_date
-) AS internal_query; -- done
+) AS internal_query;
 
 
 -- Zjistěte, jaké byly prodeje v každém dni za vybraný měsíc (květen)
@@ -164,7 +152,7 @@ WHERE
 GROUP BY 
     DAY(transaction_date)
 ORDER BY 
-    DAY(transaction_date); -- done
+    DAY(transaction_date);
 
 
 
@@ -290,7 +278,7 @@ GROUP BY
         WHEN DAYOFWEEK(transaction_date) = 6 THEN 'Pátek'
         WHEN DAYOFWEEK(transaction_date) = 7 THEN 'Sobota'
         ELSE 'Neděle'
-    END; -- done
+    END;
 
 
 -- Získat data o jednotlivých časech přes den
@@ -305,48 +293,4 @@ WHERE
 GROUP BY 
     HOUR(transaction_time)
 ORDER BY 
-    HOUR(transaction_time); -- done
-
-   
--- Už není v projektu
-
-SELECT 
-	CASE 
-		WHEN transaction_qty = 1 THEN 1
-		WHEN transaction_qty = 2 THEN 2
-		WHEN transaction_qty = 3 THEN 3
-		WHEN transaction_qty = 4 THEN 4
-		WHEN transaction_qty = 5 THEN 5
-		WHEN transaction_qty = 6 THEN 6
-		WHEN transaction_qty = 7 THEN 7
-		WHEN transaction_qty = 8 THEN 8
-		WHEN transaction_qty = 9 THEN 9
-	END AS pocet,
-	COUNT(transaction_qty)
-FROM coffee_shop_data csd 
-WHERE transaction_qty > 0
-GROUP BY 
-	CASE 
-		WHEN transaction_qty = 1 THEN 1
-		WHEN transaction_qty = 2 THEN 2
-		WHEN transaction_qty = 3 THEN 3
-		WHEN transaction_qty = 4 THEN 4
-		WHEN transaction_qty = 5 THEN 5
-		WHEN transaction_qty = 6 THEN 6
-		WHEN transaction_qty = 7 THEN 7
-		WHEN transaction_qty = 8 THEN 8
-		WHEN transaction_qty = 9 THEN 9
-	END
-ORDER BY pocet;
-	
-SELECT 
-	MONTH (transaction_date),
-	ROUND(SUM(unit_price * transaction_qty))
-FROM coffee_shop_data
-WHERE MONTH (transaction_date) IN (4,5)
-GROUP BY MONTH (transaction_date);
-
-
-
-
-
+    HOUR(transaction_time);
