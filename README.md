@@ -1,5 +1,5 @@
 # CoffeeShopSQL
-### Final SQL project
+Tento projekt jsem vytvořil jako cvičení v rámci kurzu zaměřeného na SQL. Dostali jsme data nově otevřených kaváren v NewYorku a otázky, na které jsme měli odpovědět. Po zpracování dat pomocí SQL dotazů jsem stejná data použil i na vytvoření PowerBI dashboardu, který poskytuje odpovědi na všechny otázky ze zadání.
 
 ## Zadání
 Máte k dispozici data Coffee_Shop_Data.csv. Tyto data uložte do databáze.  
