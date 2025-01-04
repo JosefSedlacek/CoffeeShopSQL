@@ -18,6 +18,7 @@ Soubor obsahuje následující informace:
 * ``product_type`` - typ produktu (podkategorie)
 * ``product_detail`` - detailní popis prodávaného produktu
 
+## Otázky
 Vaše analýza dat by měla zodpovědět následující otázky:
 1. Celkové tržby za květen
 2. Procentuální změna tržeb oproti dubnu
